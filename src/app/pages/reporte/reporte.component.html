@@ -1,0 +1,204 @@
+<hr />
+<app-loading *ngIf="loading"></app-loading>
+<div class="text-center" *ngIf="mensaje.ok">
+  <h1>{{ mensaje.mensaje }}</h1>
+</div>
+<div
+  class="container animate__animated animate__fadeIn"
+  *ngIf="!loading && !mensaje.ok"
+>
+  <div class="text-center">
+    <h1>Reportes de incidentes</h1>
+  </div>
+  <form
+    [formGroup]="forma"
+    ngNativeValidate
+    autocomplete="off"
+    (ngSubmit)="guardar()"
+  >
+    <div class="card">
+      <h5 class="card-header">Datos del asegurado</h5>
+      <div class="card-body">
+        <div class="alert alert-success" role="alert" *ngIf="mensajeok">
+          Reporte generado exitosamente, {{ mensajeResp }}
+        </div>
+        <div class="alert alert-danger" role="alert" *ngIf="mensajeerror">
+          Reporte no se ha generado, {{ mensajeResp }}
+        </div>
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text" id="basic-addon1"
+              ><strong>Cod verif</strong></span
+            >
+          </div>
+          <input
+            type="number"
+            class="form-control"
+            placeholder="Introducir Codigo"
+            aria-label="Username"
+            formControlName="cod_verf_aseg"
+            aria-describedby="basic-addon1"
+            required
+          />
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label>Nombre Persona</label>
+            <input
+              type="text"
+              placeholder="Nombre Persona"
+              class="form-control"
+              value="{{ data.nombre }}"
+              disabled
+            />
+          </div>
+          <div class="form-group col-md-6">
+            <label>Seleccione placa</label>
+            <select
+              class="form-control"
+              formControlName="selectplaca"
+              name="selectplaca"
+              onchange="setCustomValidity('')"
+              oninvalid="setCustomValidity('Selecciona una placa')"
+              required
+            >
+              <option disabled>Seleccione</option>
+              <option *ngFor="let placa of usuarioSeg" [value]="placa.placa">
+                {{ placa.placa }}
+              </option>
+            </select>
+          </div>
+          <div class="form-group col-md-6">
+            <label for="selectsiniest">Tipo Siniestro</label>
+            <select
+              formControlName="sel_sini_aseg"
+              class="form-control"
+              id="selectsiniest"
+              (change)="habFormTercero($event.target.value)"
+              onchange="setCustomValidity('')"
+              oninvalid="setCustomValidity('Seleccione tipo de siniestro')"
+              required
+            >
+              <option selected disabled value="0">
+                Seleccione Tipo de siniestro
+              </option>
+              <option
+                *ngFor="let siniestr of siniestros"
+                [value]="siniestr.nombre"
+              >
+                {{ siniestr.nombre }}
+              </option>
+            </select>
+          </div>
+          <div class="form-group col-md-6">
+            <label for="inputubica">Ubicacion</label>
+            <input
+              type="text"
+              placeholder="Descripcion ubicacion"
+              class="form-control"
+              id="inputubica"
+              formControlName="inp_ubic_aseg"
+              required
+            />
+          </div>
+          <div class="form-group col-md-12">
+            <label for="textareadesc">Explique lo que paso</label>
+            <textarea
+              class="form-control"
+              id="textareadesc"
+              placeholder="Descripcion"
+              rows="3"
+              formControlName="inp_desc_aseg"
+            ></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+    <hr />
+    <div class="card animate__animated animate__fadeIn" *ngIf="formPersTerc">
+      <h5 class="card-header">Datos Personales de terceros</h5>
+      <div class="card-body">
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label for="inputplacapers">Placa</label>
+            <input
+              type="text"
+              placeholder="Descripcion ubicacion"
+              class="form-control"
+              formControlName="inp_plac_pers"
+              id="inputplacapers"
+            />
+          </div>
+          <div class="form-group col-md-6">
+            <label for="inputnombrpers">Nombre completo</label>
+            <input
+              type="text"
+              placeholder="Descripcion ubicacion"
+              class="form-control"
+              formControlName="inp_nomb_pers"
+              id="inputnombrpers"
+            />
+          </div>
+          <div class="form-group col-md-6">
+            <label for="inputNrodOC">Nro de documentacion</label>
+            <input
+              type="number"
+              formControlName="inp_docu_pers"
+              placeholder="Descripcion ubicacion"
+              class="form-control"
+              id="inputNrodOC"
+            />
+          </div>
+          <div class="form-group col-md-6">
+            <label for="inputNroTel">Nro de telefono</label>
+            <input
+              type="number"
+              placeholder="Descripcion ubicacion"
+              class="form-control"
+              formControlName="inp_tele_pers"
+              id="inputNroTel"
+            />
+          </div>
+          <div class="form-group">
+            <label for="exampleFormControlFile1"
+              ><strong>Seleccione imagen 1</strong>
+            </label>
+            <input
+              type="file"
+              class="form-control-file"
+              id="exampleFormControlFile1"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="text-center">
+      <span
+        ><strong>Enviaremos una copia del reporte a su correo.</strong></span
+      >
+    </div>
+    <div class="text-center">
+      <button
+        type="submit"
+        *ngIf="!loadingButton"
+        class="btn btn-lg btn-primary"
+      >
+        Enviar
+      </button>
+      <button
+        class="btn btn-primary"
+        type="button"
+        disabled
+        *ngIf="loadingButton"
+      >
+        <span
+          class="spinner-border spinner-border-sm"
+          role="status"
+          aria-hidden="true"
+        ></span>
+        Loading...
+      </button>
+    </div>
+  </form>
+  <hr />
+</div>

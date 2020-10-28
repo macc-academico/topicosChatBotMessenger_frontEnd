@@ -1,0 +1,150 @@
+<hr />
+<app-loading *ngIf="loading"></app-loading>
+<div class="text-center" *ngIf="mensaje.ok">
+  <h1>{{ mensaje.mensaje }}</h1>
+</div>
+<div
+  class="container animate__animated animate__fadeIn"
+  *ngIf="!loading && !mensaje.ok"
+>
+  <div class="text-center">
+    <h1>REPORTE DE RECLAMO</h1>
+  </div>
+  <form
+    [formGroup]="forma"
+    ngNativeValidate
+    autocomplete="off"
+    (ngSubmit)="guardar()"
+  >
+    <div class="card">
+      <h5 class="card-header">Informacin a enviar</h5>
+      <div class="card-body">
+        <div class="alert alert-success" role="alert" *ngIf="mensajeok">
+          Reporte generado exitosamente, {{ mensajeResp }}
+        </div>
+        <div class="alert alert-danger" role="alert" *ngIf="mensajeerror">
+          Reporte no se ha generado, {{ mensajeResp }}
+        </div>
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text" id="basic-addon1"
+              ><strong>Cod verif</strong></span
+            >
+          </div>
+          <input
+            type="number"
+            class="form-control"
+            placeholder="Introducir Codigo"
+            aria-label="Username"
+            formControlName="cod_verf_aseg"
+            aria-describedby="basic-addon1"
+            required
+          />
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label for="inputEmail4"><strong>Nombre Persona</strong> </label>
+            <input
+              type="text"
+              placeholder="Nombre Persona"
+              value="{{ data.nombre }}"
+              class="form-control"
+              disabled
+              id="inputEmail4"
+            />
+          </div>
+          <div class="form-group col-md-6">
+            <label for="inputPassword4"><Strong>Tipo de Seguro</Strong> </label>
+            <select
+              class="form-control"
+              formControlName="tipo_seguro"
+              name="tipo_seguro"
+              onchange="setCustomValidity('')"
+              oninvalid="setCustomValidity('Selecciona tipo de seguro')"
+              required
+            >
+              <option disabled>Seleccione</option>
+              <option *ngFor="let seg of seguros" [value]="seg.nombre">
+                {{ seg.nombre }}
+              </option>
+            </select>
+          </div>
+          <div class="form-group col-md-6">
+            <label for="inputPassword4"
+              ><strong> Seleccione Servicio</strong></label
+            >
+            <select
+              class="form-control"
+              formControlName="tipo_servicio"
+              name="tipo_servicio"
+              onchange="setCustomValidity('')"
+              oninvalid="setCustomValidity('Selecciona tipo de servicio')"
+              required
+            >
+              <option disabled>Seleccione</option>
+              <option
+                *ngFor="let serv of servicios"
+                [value]="serv.tiposervicio"
+              >
+                {{ serv.tiposervicio }}
+              </option>
+            </select>
+          </div>
+
+          <div class="form-group col-md-12">
+            <label for="inputEmail4"
+              ><strong> Explique lo que paso</strong></label
+            >
+            <textarea
+              class="form-control"
+              id="exampleFormControlTextarea1"
+              formControlName="descripcion"
+              placeholder="Descripcion"
+              required
+              rows="3"
+            ></textarea>
+          </div>
+
+          <div class="form-group col-md-12">
+            <label for="inputEmail4"><strong> Sugerencia</strong></label>
+            <textarea
+              class="form-control"
+              id="exampleFormControlTextarea1"
+              formControlName="sugerencia"
+              placeholder="Sugerencia"
+              rows="3"
+            ></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+    <hr />
+    <div class="text-center">
+      <span
+        ><strong
+          >Disculpe por las molestias, que tenga un buen dia.</strong
+        ></span
+      >
+    </div>
+    <div class="text-center">
+      <button type="submit" class="btn btn-primary" *ngIf="!loadingButton">
+        Enviar
+      </button>
+      <button
+        class="btn btn-primary"
+        type="button"
+        disabled
+        *ngIf="loadingButton"
+      >
+        <span
+          class="spinner-border spinner-border-sm"
+          role="status"
+          aria-hidden="true"
+        ></span>
+        Loading...
+      </button>
+    </div>
+  </form>
+
+  <br />
+</div>
